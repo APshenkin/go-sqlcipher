@@ -19,8 +19,8 @@ func main() {
 	defer db.Close()
 
 	sqlStmt := `
-	create table foo (id integer not null primary key, name text);
-	delete from foo;
+	CREATE TABLE foo (id INTEGER NOT NULL PRIMARY KEY, name TEXT);
+	DELETE FROM foo;
 	`
 	_, err = db.Exec(sqlStmt)
 	if err != nil {
@@ -32,20 +32,23 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	stmt, err := tx.Prepare("insert into foo(id, name) values(?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO foo(id, name) VALUES(?, ?)")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer stmt.Close()
 	for i := 0; i < 100; i++ {
-		_, err = stmt.Exec(i, fmt.Sprintf("こんにちわ世界%03d", i))
+		_, err = stmt.Exec(i, fmt.Sprintf("こんにちは世界%03d", i))
 		if err != nil {
 			log.Fatal(err)
 		}
 	}
-	tx.Commit()
+	err = tx.Commit()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	rows, err := db.Query("select id, name from foo")
+	rows, err := db.Query("SELECT id, name FROM foo")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,7 +67,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	stmt, err = db.Prepare("select name from foo where id = ?")
+	stmt, err = db.Prepare("SELECT name FROM foo WHERE id = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -76,17 +79,17 @@ func main() {
 	}
 	fmt.Println(name)
 
-	_, err = db.Exec("delete from foo")
+	_, err = db.Exec("DELETE FROM foo")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec("insert into foo(id, name) values(1, 'foo'), (2, 'bar'), (3, 'baz')")
+	_, err = db.Exec("INSERT INTO foo(id, name) VALUES(1, 'foo'), (2, 'bar'), (3, 'baz')")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	rows, err = db.Query("select id, name from foo")
+	rows, err = db.Query("SELECT id, name FROM foo")
 	if err != nil {
 		log.Fatal(err)
 	}

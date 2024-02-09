@@ -20,8 +20,9 @@ Update code from https://github.com/sqlcipher/sqlcipher
 Current release: v4.5.6
 
 Execute:
-./configure
-make
+./configure --enable-tempstore=yes CFLAGS="-DSQLITE_HAS_CODEC -L$OPENSSL_PATH/lib/ -I$OPENSSL_PATH/include" \
+        LDFLAGS="$OPENSSL_PATH/lib/libcrypto.a"
+make sqlite3.c
 
 Track files:
 sqlite3.h

@@ -64,7 +64,8 @@ func scanType(cdt string) reflect.Type {
 	case SQLITE_TEXT:
 		return reflect.TypeOf(sql.NullString{})
 	case SQLITE_BLOB:
-		return reflect.TypeOf(sql.RawBytes{})
+		// this is not using sql.RawBytes because of this issue https://github.com/mattn/go-sqlite3/pull/1274
+		return reflect.SliceOf(reflect.TypeOf(byte(0)))
 	case SQLITE_REAL:
 		return reflect.TypeOf(sql.NullFloat64{})
 	case SQLITE_NUMERIC:
